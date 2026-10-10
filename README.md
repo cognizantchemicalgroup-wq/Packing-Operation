@@ -33,6 +33,23 @@ Open `interface-preview.html` in a browser to inspect the Dashboard, Daily Packi
 
 6. Add the local Firebase service-account key as `service-account.json` (or configure Application Default Credentials), then run `npm run provision:users`. The script creates or updates each Firebase Authentication account with a fresh random password, marks the email verified, and creates the matching Firestore profile. It never stores passwords in Firestore. All users must use **Forgot password?** on the login page to set a password before signing in. Running the script again resets all five account passwords, so users must reset them again.
 
+## Deploy to Vercel
+
+Import this project into Vercel from the Git repository and set the **Root Directory** to the folder containing this `package.json` and `index.html` (the repository root if this project is at the top level). The project includes `vercel.json` with the Vite framework, `npm run build` build command, and `dist` output directory.
+
+Add all six Firebase Web App values as Vercel Environment Variables for each environment you deploy (Production, Preview, and Development as applicable):
+
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_STORAGE_BUCKET`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- `VITE_FIREBASE_APP_ID`
+
+Get these values from the Firebase Console's Web App configuration. They are client-side Firebase configuration, not Firebase Admin credentials. Never add a service-account key or other private credential to Vercel Environment Variables for this frontend. The `service-account.json` file is only for the local user-provisioning script and must remain out of Git and the deployed `dist` output.
+
+The Vercel Git deployment must include `index.html`, `src/main.jsx`, the rest of `src/`, `package.json`, `package-lock.json`, and `vite.config.js`. If Vercel reports that `/src/main.jsx` cannot be resolved while the local build succeeds, check that its Root Directory points to this project folder and that these files are present in the Git commit being deployed.
+
 ## Firestore layout
 
 All company data sits under `companies/ccpl/`:
